@@ -4,6 +4,8 @@ import matplotlib.font_manager as fm
 import pandas as pd
 from sklearn.model_selection import train_test_split # 정제한 데이터를 훈련 / 테스트 데이터로 분할
 from sklearn.linear_model import LinearRegression # 선형회귀 모델
+import os
+import s3fs
 
 def get_clean_data(dataset):
     dataset = dataset.dropna(axis=0, subset=['부채비율', '신평사등급점수', '종합점수']) # (부채비율 컬럼의 데이터가 na인 row 삭제)
@@ -45,57 +47,61 @@ def plot_scatter(x, c, y): # 산점도 객체 생성
     ax.set_title(f'{c}와 종합 점수의 상관관계')
     return fig
 
-dataset = pd.read_csv('276CSS.csv', dtype={"사업자번호": str})
+#dataset = pd.read_csv('276CSS.csv', dtype={"사업자번호": str})
 
-classifier, x_train, x_test, y_train, y_test = get_clean_data(dataset)
+#classifier, x_train, x_test, y_train, y_test = get_clean_data(dataset)
 
-y_pred = classifier.predict(x_test)
+#y_pred = classifier.predict(x_test)
 
-st.set_page_config(layout='wide')
-st.header('276 CSS ML')
+#st.set_page_config(layout='wide')
+#st.header('276 CSS ML?')
 
-st.write(f'훈련 세트 정확도: {round(classifier.score(x_train, y_train), 3)  * 100}%') # 훈련 세트 평가
-st.write(f'테스트 세트 정확도: {round(classifier.score(x_test, y_test), 3)  * 100}%') # 테스트 세트 평가
+#st.write('AWS_ACCESS_KEY_ID')
+#print('os.getenv', '\n', os.getenv('AWS_ACCESS_KEY_ID'))
+#st.write(os.getenv('AWS_SECRET_ACCESS_KEY'))
 
-plt.rc('font', family='AppleGothic') 
-plt.rcParams['axes.unicode_minus'] = False #한글 폰트 사용시 마이너스 폰트 깨짐 해결
-#matplotlib 패키지 한글 깨짐 처리 끝
+#st.write(f'훈련 세트 정확도: {round(classifier.score(x_train, y_train), 3)  * 100}%') # 훈련 세트 평가
+#st.write(f'테스트 세트 정확도: {round(classifier.score(x_test, y_test), 3)  * 100}%') # 테스트 세트 평가
 
-st.write('아래 두 그래프는 같은 그래프리지만 크기를 지정할수 없어 작게 만들기 위해 아래와 같이 출력')
-fig, ax = plt.subplots()
-ax.scatter(y_test, y_pred, alpha=0.4)
-ax.set_xlabel('예측 종합 점수')
-ax.set_ylabel('실제 종합 점수')
-ax.set_title(f'276 CSS ML')
+#plt.rc('font', family='AppleGothic') 
+#plt.rcParams['axes.unicode_minus'] = False #한글 폰트 사용시 마이너스 폰트 깨짐 해결
+##matplotlib 패키지 한글 깨짐 처리 끝
 
-for i in range(0, 1):
-    cols = st.columns(2)
-    for col in cols:
-        col.pyplot(fig)
+#st.write('아래 두 그래프는 같은 그래프리지만 크기를 지정할수 없어 작게 만들기 위해 아래와 같이 출력')
+#fig, ax = plt.subplots()
+#ax.scatter(y_test, y_pred, alpha=0.4)
+#ax.set_xlabel('예측 종합 점수')
+#ax.set_ylabel('실제 종합 점수')
+#ax.set_title(f'276 CSS ML')
 
-st.write('[독립변수]')
-st.write('- 종합점수')
+#for i in range(0, 1):
+#    cols = st.columns(2)
+#    for col in cols:
+#        col.pyplot(fig)
 
-st.write('[종속변수]')
-st.write('- 부채비율, 매출액, 매출액, 영업이익률, 총자산 영업이익률, 자산규모, 이자보상비율, 자기자본 순이익률, 차입금의존도')
-st.write('- 매출액증가율(1-9단계), 유동비율, 종합시공능력, 전문설비시공능력, 의료재단등급(1-6단계), 신평사등급/watch(1-7단계),')
-st.write('- 주요주주지분(1-4단계), 시장금리변동(1-5단계), 상장여부(1-4단계), 배서인정보(1-4단계), 과거이력(1-4단계), 업력(년수)')
+#st.write('[독립변수]')
+#st.write('- 종합점수')
 
-x_list = []
-x_list_columns = []
+#st.write('[종속변수]')
+#st.write('- 부채비율, 매출액, 매출액, 영업이익률, 총자산 영업이익률, 자산규모, 이자보상비율, 자기자본 순이익률, 차입금의존도')
+#st.write('- 매출액증가율(1-9단계), 유동비율, 종합시공능력, 전문설비시공능력, 의료재단등급(1-6단계), 신평사등급/watch(1-7단계),')
+#st.write('- 주요주주지분(1-4단계), 시장금리변동(1-5단계), 상장여부(1-4단계), 배서인정보(1-4단계), 과거이력(1-4단계), 업력(년수)')
 
-for i in range(len(x_test.columns)):
-    x_list_columns.append(x_test.columns[i])
-    x_list.append( x_test[ x_test.columns[i] ] ) # 종속 변수 Columns array
+#x_list = []
+#x_list_columns = []
 
-fig_list = []
-for i in range(len(x_list)):
-    fig = plot_scatter(x_list[i], x_list_columns[i], y_pred)
-    fig_list.append(fig)
+#for i in range(len(x_test.columns)):
+#    x_list_columns.append(x_test.columns[i])
+#    x_list.append( x_test[ x_test.columns[i] ] ) # 종속 변수 Columns array
 
-idx = 0
-for i in range(int(len(fig_list) / 2)):
-    cols = st.columns(2)
-    for col in cols:
-        col.pyplot(fig_list[idx])
-        idx += 1
+#fig_list = []
+#for i in range(len(x_list)):
+#    fig = plot_scatter(x_list[i], x_list_columns[i], y_pred)
+#    fig_list.append(fig)
+
+#idx = 0
+#for i in range(int(len(fig_list) / 2)):
+#    cols = st.columns(2)
+#    for col in cols:
+#        col.pyplot(fig_list[idx])
+#        idx += 1
