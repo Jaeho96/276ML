@@ -65,7 +65,7 @@ fs = s3fs.S3FileSystem(anon=False)
 @st.cache_data(ttl=600)
 def read_file(filename):
     with fs.open(filename) as f:
-        return f.read().decode("utf-8")
+        return pd.read_csv(f)
 
 content = read_file("276ml/276CSS.csv")
 
