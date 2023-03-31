@@ -56,6 +56,21 @@ import s3fs
 st.set_page_config(layout='wide')
 st.header('276 CSS ML?')
 
+# 연결 개체 만들기
+# 'anon=False'는 익명이 아님을 의미합니다. 즉, 액세스 키를 사용하여 데이터를 가져옵니다.
+fs = s3fs.S3FileSystem(anon=False)
+
+# 파일 내용을 검색합니다.
+# st.cache_data를 사용하여 쿼리가 변경되거나 10분 후에만 다시 실행합니다.
+@st.cache_data(ttl=600)
+def read_file(filename):
+    with fs.open(filename) as f:
+        return f.read().decode("utf-8")
+
+content = read_file("s3://276ml/276CSS.csv")
+
+print('content', content)
+
 #st.write('AWS_ACCESS_KEY_ID')
 #print('os.getenv', '\n', os.getenv('AWS_ACCESS_KEY_ID'))
 #st.write(os.getenv('AWS_SECRET_ACCESS_KEY'))
