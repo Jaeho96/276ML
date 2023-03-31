@@ -67,9 +67,9 @@ def read_file(filename):
     with fs.open(filename) as f:
         return f.read().decode("utf-8")
 
-content = read_file("https://276ml.s3.ap-northeast-2.amazonaws.com/276CSS.csv")
+content = read_file("276ml/276CSS.csv")
 
-print('content', content)
+st.dataframe(content)
 
 #st.write('AWS_ACCESS_KEY_ID')
 #print('os.getenv', '\n', os.getenv('AWS_ACCESS_KEY_ID'))
