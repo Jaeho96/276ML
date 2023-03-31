@@ -7,45 +7,45 @@ from sklearn.linear_model import LinearRegression # 선형회귀 모델
 import os
 import s3fs
 
-def get_clean_data(dataset):
-    dataset = dataset.dropna(axis=0, subset=['부채비율', '신평사등급점수', '종합점수']) # (부채비율 컬럼의 데이터가 na인 row 삭제)
-    dataset = dataset[ (dataset['부도정보'] != 1.0) & (dataset['종합점수'] != '#VALUE!') ]
-    # (부도정보 컬럼의 데이터가 1인 row 삭제, 종합점수 컬럼의 데이터가 '#VALUE!'인 row 삭제)
-    dataset = dataset[(dataset != '-').all(axis=1)] # '-'와 동일한 데이터를 가진 row 삭제
-    dataset = dataset.fillna(0) # na값 0으로 대체
-    dataset = dataset.dropna() # #REF 삭제
-    dataset = dataset.reset_index(drop=True) # 인덱스 재정렬
-    dataset = dataset.replace(',', '', regex=True) # , 삭제
+#def get_clean_data(dataset):
+#    dataset = dataset.dropna(axis=0, subset=['부채비율', '신평사등급점수', '종합점수']) # (부채비율 컬럼의 데이터가 na인 row 삭제)
+#    dataset = dataset[ (dataset['부도정보'] != 1.0) & (dataset['종합점수'] != '#VALUE!') ]
+#    # (부도정보 컬럼의 데이터가 1인 row 삭제, 종합점수 컬럼의 데이터가 '#VALUE!'인 row 삭제)
+#    dataset = dataset[(dataset != '-').all(axis=1)] # '-'와 동일한 데이터를 가진 row 삭제
+#    dataset = dataset.fillna(0) # na값 0으로 대체
+#    dataset = dataset.dropna() # #REF 삭제
+#    dataset = dataset.reset_index(drop=True) # 인덱스 재정렬
+#    dataset = dataset.replace(',', '', regex=True) # , 삭제
 
-    dataset = dataset.astype({
-        '부채비율': float, '매출액': float, '매출액 영업이익률': float, '총자산 영업이익률': float, '자산규모': float,
-        '이자보상비율': float, '자기자본 순이익률': float, '차입금의존도': float,
-        '매출액증가율(1~9단계)': float, '유동비율': float, '종합시공능력': float, '전문설비시공능력': float,
-        '의료재단등급(1~6)': float, '신평사등급/watch(1~7단계)': float, '주요주주지분(1~4단계)': float, '시장금리변동(1~5단계)': float,
-        '상장여부(1~4단계)': float, '배서인정보(1~4단계)': float, '과거이력(1~4단계)': float , '업력(년수)': float,
-        '종합점수': float
-    })
+#    dataset = dataset.astype({
+#        '부채비율': float, '매출액': float, '매출액 영업이익률': float, '총자산 영업이익률': float, '자산규모': float,
+#        '이자보상비율': float, '자기자본 순이익률': float, '차입금의존도': float,
+#        '매출액증가율(1~9단계)': float, '유동비율': float, '종합시공능력': float, '전문설비시공능력': float,
+#        '의료재단등급(1~6)': float, '신평사등급/watch(1~7단계)': float, '주요주주지분(1~4단계)': float, '시장금리변동(1~5단계)': float,
+#        '상장여부(1~4단계)': float, '배서인정보(1~4단계)': float, '과거이력(1~4단계)': float , '업력(년수)': float,
+#        '종합점수': float
+#    })
 
-    x = dataset[['부채비율', '매출액', '매출액 영업이익률', '총자산 영업이익률', '자산규모', '이자보상비율', '자기자본 순이익률', '차입금의존도',
-                '매출액증가율(1~9단계)', '유동비율', '종합시공능력', '전문설비시공능력', '의료재단등급(1~6)', '신평사등급/watch(1~7단계)',
-                '주요주주지분(1~4단계)', '시장금리변동(1~5단계)', '상장여부(1~4단계)', '배서인정보(1~4단계)', '과거이력(1~4단계)', '업력(년수)',
-                ]]
-    y = dataset[['종합점수']]
+#    x = dataset[['부채비율', '매출액', '매출액 영업이익률', '총자산 영업이익률', '자산규모', '이자보상비율', '자기자본 순이익률', '차입금의존도',
+#                '매출액증가율(1~9단계)', '유동비율', '종합시공능력', '전문설비시공능력', '의료재단등급(1~6)', '신평사등급/watch(1~7단계)',
+#                '주요주주지분(1~4단계)', '시장금리변동(1~5단계)', '상장여부(1~4단계)', '배서인정보(1~4단계)', '과거이력(1~4단계)', '업력(년수)',
+#                ]]
+#    y = dataset[['종합점수']]
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, test_size=0.2)
+#    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, test_size=0.2)
 
-    classifier = LinearRegression()
-    classifier.fit(x_train, y_train)
+#    classifier = LinearRegression()
+#    classifier.fit(x_train, y_train)
 
-    return classifier, x_train, x_test, y_train, y_test
+#    return classifier, x_train, x_test, y_train, y_test
 
-def plot_scatter(x, c, y): # 산점도 객체 생성
-    fig, ax = plt.subplots()
-    ax.scatter(x, y, alpha=0.4)
-    ax.set_xlabel(c)
-    ax.set_ylabel('종합 점수')
-    ax.set_title(f'{c}와 종합 점수의 상관관계')
-    return fig
+#def plot_scatter(x, c, y): # 산점도 객체 생성
+#    fig, ax = plt.subplots()
+#    ax.scatter(x, y, alpha=0.4)
+#    ax.set_xlabel(c)
+#    ax.set_ylabel('종합 점수')
+#    ax.set_title(f'{c}와 종합 점수의 상관관계')
+#    return fig
 
 #dataset = pd.read_csv('276CSS.csv', dtype={"사업자번호": str})
 
@@ -53,8 +53,8 @@ def plot_scatter(x, c, y): # 산점도 객체 생성
 
 #y_pred = classifier.predict(x_test)
 
-#st.set_page_config(layout='wide')
-#st.header('276 CSS ML?')
+st.set_page_config(layout='wide')
+st.header('276 CSS ML?')
 
 #st.write('AWS_ACCESS_KEY_ID')
 #print('os.getenv', '\n', os.getenv('AWS_ACCESS_KEY_ID'))
