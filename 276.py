@@ -73,6 +73,8 @@ y_pred = classifier.predict(x_test)
 st.write(f'훈련 세트 정확도: {round(classifier.score(x_train, y_train), 3)  * 100}%') # 훈련 세트 평가
 st.write(f'테스트 세트 정확도: {round(classifier.score(x_test, y_test), 3)  * 100}%') # 테스트 세트 평가
 
+sys_font=fm.findSystemFonts()
+print("sys_font", "\n", sys_font) 
 plt.rc('font', family='AppleGothic') 
 plt.rcParams['axes.unicode_minus'] = False #한글 폰트 사용시 마이너스 폰트 깨짐 해결
 #matplotlib 패키지 한글 깨짐 처리 끝
